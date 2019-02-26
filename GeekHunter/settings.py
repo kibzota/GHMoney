@@ -11,6 +11,31 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from datetime import timedelta
+
+from celery.schedules import crontab
+
+HG_KEY = "115d7e0b"
+
+CELERY_TIMEZONE = 'America/Sao_Paulo'
+# Let's make things happen
+CELERY_BEAT_SCHEDULE = {
+ 'send-summary-every-hour': {
+       'task': 'core.tasks.save_hg_data',
+
+       'schedule': 3600.0,
+        'args': ()
+        # If you're using any arguments
+
+    },
+
+}
+
+#Celery Config
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -77,10 +102,12 @@ WSGI_APPLICATION = 'GeekHunter.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'GHMoney',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'gh_money',
+        "USER": 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': '127.0.0.1',
-        'PORT': 27017
+        'PORT': 5432
     }
 }
 
