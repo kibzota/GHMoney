@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% block title %}
+GH Money
+{% endblock %}
+{% block content %}
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#home">Bitcoin</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#menu1">Dolar</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#menu2">Euro</a>
+  </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane  active col-md-12" id="home">
+      <dib class="row">
+        <div class="col-md-8">
+            <h4 class="text-center">Cotação do Bitcoin</h4>
+            <h5 class="text-center">Variação</h5>
+                <h6 class="text-center"></h6>
+                <h6 class="text-center">Ontem:  {{ bitcoin_yesterday_variation}}</h6>
+                <h6 class="text-center">Semana passada:  {{ bitcoin_last_week_variation}}</h6>
+                <h6 class="text-center">Mês passado:  {{ bitcoin_last_month_variation}}</h6>
+
+        </div>
+            <div id="chart_bitcoin"></div>
+
+      </dib>
+
+  </div>
+  <div class="tab-pane  fade active col-md-10" id="menu1">
+        <dib class="row">
+        <div class="col-md-8">
+            <h4 class="text-center">Cotação do Dolar</h4>
+            <h5 class="text-center">Variação</h5>
+            <h6 class="text-center"></h6>
+            <h6 class="text-center">Ontem:  {{ dolar_yesterday_variation}}</h6>
+            <h6 class="text-center">Semana passada:  {{ dolar_last_week_variation}}</h6>
+            <h6 class="text-center">Mês passado:  {{ dolar_last_month_variation}}</h6>
+
+        </div>
+            <div id="chart_dolar"></div>
+
+        <div class="col-md-4">
+
+        </div>
+      </dib>
+  </div>
+  <div class="tab-pane  fade active col-md-10" id="menu2">
+      <dib class="row">
+        <div class="col-md-8">
+            <h4 class="text-center">Cotação do Euro</h4>
+            <h5 class="text-center">Variação</h5>
+            <h6 class="text-center"></h6>
+            <h6 class="text-center">Ontem:  {{ euro_yesterday_variation}}</h6>
+            <h6 class="text-center">Semana passada:  {{ euro_last_week_variation}}</h6>
+            <h6 class="text-center">Mês passado:  {{ euro_last_month_variation}}</h6>
+
+        </div>
+            <div id="chart_euro"></div>
+
+        <div class="col-md-4">
+
+        </div>
+      </dib>
+  </div>
+</div>
+
+{% endblock %}
+{% block script %}
+
+
+<script>
+    function generateGraphic(){
+        c3.generate({
+            bindto: '#chart_bitcoin',
+            size: {
+                height: 'auto',
+            },
+            legend: {
+                show: false
+            },
+            data: {
+                columns: [{{ bitcoin_values|safe }}],
+                type: 'spline'
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: {{ bitcoin_date|safe }},
+                },
+                y: {
+                    padding: {top:100, bottom:100}
+                }
+            }
+
+        });
+
+        c3.generate({
+            bindto: '#chart_dolar',
+
+            size: {
+                height: 'auto',
+            },
+            legend: {
+                show: false
+            },
+            data: {
+                columns: [{{ dolar_values|safe }}],
+                type: 'spline'
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: {{ dolar_date|safe }},
+                },
+                y: {
+                    padding: {top:100, bottom:100}
+                }
+            }
+
+        });
+        c3.generate({
+            bindto: '#chart_euro',
+            size: {
+                height: 'auto',
+            },
+            legend: {
+                show: false
+            },
+            data: {
+                columns: [{{ euro_values|safe }}],
+                type: 'spline'
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: {{ euro_date|safe }},
+                },
+                y: {
+                    padding: {top:100, bottom:100}
+                }
+            }
+
+        });
+    }
+
+    $(function(){
+        setTimeout(function(){
+            generateGraphic();
+        }, 1000);
+    });
+</script>
+{% endblock %}
